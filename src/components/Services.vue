@@ -1,17 +1,17 @@
 <template>
-    <div id="Services">
+    <div id="ServiceProviders">
         <!--Service TABLE-->
         <v-container fluid>
             <v-layout row justify-center>
             <v-flex md11 xs12>
                 <v-card>
-                    <v-card-title class="headline pink darken-2 white--text">Services</v-card-title>
-                    <v-data-table v-bind:headers="tableHeaders" :items="services" hide-actions class="elevation-1">
+                    <v-card-title class="headline pink darken-2 white--text">ServiceProviders</v-card-title>
+                    <v-data-table v-bind:headers="tableHeaders" :items="serviceProviders" hide-actions class="elevation-1">
                         <template slot="items" slot-scope="props">
                             <td class="text-xs-right">{{ props.item.position }}</td>
                             <td class="text-xs-right"><v-icon>{{ props.item.icon }}</v-icon></td>
-                            <td class="text-xs-right">{{ props.item.title }}</td>
-                            <td class="text-xs-right">{{ props.item.description }}</td>
+                            <td class="text-xs-right">{{ props.item.name }}</td>
+                            <td class="text-xs-right">{{ props.item.location }}</td>
                             <td class="text-xs-right">
                                 <v-btn icon  @click="startEdit(props.item)"><v-icon>fa-pencil</v-icon></v-btn>
                                 <v-btn icon  @click="deleteService(props.item)"><v-icon>fa-times</v-icon></v-btn>
@@ -40,11 +40,9 @@
                                 <v-form v-model="serviceFormValid" ref="serviceForm" lazy-validation>
                                     <v-text-field name="icon" label="icon" v-model="newService.icon" required 
                                     :rules="[v => !!v || 'Item is required']"></v-text-field>
-                                    <v-text-field name="title" label="title" v-model="newService.title" required 
+                                    <v-text-field name="name" label="name" v-model="newService.name" required 
                                     :rules="[v => !!v || 'Item is required']"></v-text-field>
-                                    <v-text-field textarea name="description" label="description" v-model="newService.description" required 
-                                    :rules="[v => !!v || 'Item is required']"></v-text-field>
-                                    <v-text-field type="number" name="position" label="position" v-model="newService.position" required 
+                                    <v-text-field textarea name="location" label="location" v-model="newService.location" required 
                                     :rules="[v => !!v || 'Item is required']"></v-text-field>
                                 </v-form>
                             </v-flex>
@@ -68,7 +66,7 @@ import firebase from './firebaseInit'
 import 'firebase/firestore'
 const db = firebase.firestore()
 export default {
-  name: 'Services',
+  name: 'ServiceProviders',
   data () {
     return {
         newServiceDialog: false,
@@ -76,50 +74,50 @@ export default {
         newService: {
             id:null,
             icon: null,
-            title: null,
-            description: null,
+            name: null,
+            location: null,
             position:null
         },
         tableHeaders: [
             {text:"Position", value: "position"},
             {text:"Icon", value: "icon"},
-            {text:"Title", value: "title"},
-            {text:"Description", value: "description"}
+            {text:"Name", value: "name"},
+            {text:"Location", value: "location"}
         ],
-        services: [],
-        servicesLoading:false,
+        serviceProviders: [],
+        serviceProvidersLoading:false,
         editOn:false
     }
   },
   methods:{
-    listServices(){
-        this.servicesLoading = true
-        this.services=[]
-        db.collection('services').get().then(querySnapshot => {
+    listServiceProviders(){
+        this.serviceProvidersLoading = true
+        this.serviceProviders=[]
+        db.collection('serviceProviders').get().then(querySnapshot => {
                 querySnapshot.forEach(doc => {
                     const data = {
                         'id': doc.id,
                         'icon': doc.data().icon,
-                        'title':doc.data().title,
-                        'description':doc.data().description,
+                        'name':doc.data().name,
+                        'location':doc.data().location,
                         'position':doc.data().position
                     }
-                    this.services.push(data)
+                    this.serviceProviders.push(data)
                 })
         })
-        this.servicesLoading = false
+        this.serviceProvidersLoading = false
     },
     createNewService(){
-        if( !this.newService.icon || !this.newService.title|| !this.newService.description || !this.newService.position)
+        if( !this.newService.icon || !this.newService.name|| !this.newService.location || !this.newService.position)
             return
-        db.collection('services').add({
+        db.collection('serviceProviders').add({
             icon: this.newService.icon,
-            title: this.newService.title,
-            description: this.newService.description,
+            title: this.newService.name,
+            location: this.newService.location,
             position: this.newService.position
         })
         .then(docRef => {
-            this.listServices()
+            this.listServiceProviders()
             this.resetNewService()
             this.newServiceDialog = false
         })
@@ -129,8 +127,8 @@ export default {
         this.newService= {
             id:null,
             icon: null,
-            title: null,
-            description: null,
+            name: null,
+            location: null,
             position:null
         }
         this.editOn=false
@@ -141,25 +139,25 @@ export default {
         this.newService= {
             id:service.id,
             icon: service.icon,
-            title: service.title,
-            description: service.description,
+            name: service.name,
+            location: service.location,
             position: service.position
         }
         this.editOn = true
         this.newServiceDialog =true
     },
     updateService(){
-        if( !this.newService.icon || !this.newService.title|| !this.newService.description || !this.newService.position)
+        if( !this.newService.icon || !this.newService.name|| !this.newService.location || !this.newService.position)
             return
-        const docRef = db.collection('services').doc(this.newService.id)
+        const docRef = db.collection('serviceProviders').doc(this.newService.id)
         docRef.set({
-            title: this.newService.title,
-            description: this.newService.description,
+            name: this.newService.name,
+            location: this.newService.location,
             position: this.newService.position,
             icon: this.newService.icon
             })
             .then( (doc)=> {
-                this.listServices()
+                this.listServiceProviders()
                 console.log("Document successfully written!", doc);
                 this.resetNewService()
             })
@@ -169,9 +167,9 @@ export default {
     },
     deleteService(service){
         if(confirm("Are you sure?")){
-        const docRef = db.collection('services').doc(service.id).delete()
+        const docRef = db.collection('serviceProviders').doc(service.id).delete()
         .then(data => {
-            this.listServices()
+            this.listServiceProviders()
             console.log("Document successfully deleted!");
         }).catch(error => {
             console.error("Error removing document: ", error);
@@ -180,7 +178,7 @@ export default {
     }
   },
   created(){
-      this.listServices()
+      this.listServiceProviders()
   }
 }
 </script>
