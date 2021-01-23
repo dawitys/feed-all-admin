@@ -93,7 +93,7 @@ export default {
     listServiceProviders(){
         this.serviceProvidersLoading = true
         this.serviceProviders=[]
-        db.collection('serviceProviders').get().then(querySnapshot => {
+        db.collection('clients').get().then(querySnapshot => {
                 querySnapshot.forEach(doc => {
                     const data = {
                         'id': doc.id,
@@ -110,7 +110,7 @@ export default {
     createNewService(){
         if( !this.newService.icon || !this.newService.name|| !this.newService.location || !this.newService.position)
             return
-        db.collection('serviceProviders').add({
+        db.collection('clients').add({
             icon: this.newService.icon,
             title: this.newService.name,
             location: this.newService.location,
@@ -149,7 +149,7 @@ export default {
     updateService(){
         if( !this.newService.icon || !this.newService.name|| !this.newService.location || !this.newService.position)
             return
-        const docRef = db.collection('serviceProviders').doc(this.newService.id)
+        const docRef = db.collection('clients').doc(this.newService.id)
         docRef.set({
             name: this.newService.name,
             location: this.newService.location,
@@ -167,7 +167,7 @@ export default {
     },
     deleteService(service){
         if(confirm("Are you sure?")){
-        const docRef = db.collection('serviceProviders').doc(service.id).delete()
+        const docRef = db.collection('clients').doc(service.id).delete()
         .then(data => {
             this.listServiceProviders()
             console.log("Document successfully deleted!");
