@@ -13,7 +13,7 @@
           <router-view></router-view>
         </v-content>
         <v-navigation-drawer app light fixed v-model="navActive">
-          <div class="black-logo"></div>
+          <div class="black-logo">&nbsp;</div>
           <v-divider></v-divider>
           <v-list dense class="pt-0">
             <v-list-tile class="list__tile--link" v-for="item in nav" :key="item.title" @click="goTo(item.route)">
@@ -77,15 +77,17 @@ div .list__tile__action{
 }
 .bg{
   background-image: url('../assets/img/dashboard.jpg');
-  background-color: rgba(10, 99, 80, 0.685);
+  background-color: rgba(140, 227, 111, 0.685);
   background-size:cover;
   background-blend-mode:multiply ;
   background-repeat:no-repeat;
   background-attachment: fixed;
 }
 .black-logo{
-  height: 200px;
-  margin: 25px;
-  background-image: url('../assets/img/lota-logo.svg');
-}
+  height: 21rem;
+  width: 21rem;
+  content:url('../assets/img/logo_web.png');
+  //background-image: url('../assets/img/logo_web.png');
+  }
+
 </style>

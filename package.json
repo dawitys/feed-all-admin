@@ -12,6 +12,7 @@
   "dependencies": {
     "firebase": "^4.8.1",
     "materialize-css": "^0.100.2",
+    "node-gyp": "^7.1.2",
     "vue": "^2.5.2",
     "vue-awesome": "^2.3.4",
     "vue-quill-editor": "^3.0.4",
