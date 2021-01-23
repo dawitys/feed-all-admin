@@ -1,20 +1,19 @@
 <template>
-    <div id="Reviews">
+    <div id="Transactions">
         <!--Review TABLE-->
        <v-container fluid>
             <v-layout row justify-center>
             <v-flex md11 xs12>
                 <v-card>
-                    <v-card-title class="headline pink darken-2 white--text">Reviews</v-card-title>
-                    <v-data-table v-bind:headers="tableHeaders" :items="reviews" hide-actions class="elevation-1">
+                    <v-card-title class="headline pink darken-2 white--text">Transactions</v-card-title>
+                    <v-data-table v-bind:headers="tableHeaders" :items="transactions" hide-actions class="elevation-1">
                         <template slot="items" slot-scope="props">
-                            <td class="text-xs-right"><img :src="props.item.profileUrl" class="profile-preview"></td>
-                            <td class="text-xs-right">{{ props.item.position }}</td>
-                            <td class="text-xs-right">{{ props.item.name }}</td>
-                            <td class="text-xs-right">{{ props.item.comment }}</td>
+                            <td class="text-xs-right">{{ props.item.entity_name }}</td>
+                            <td class="text-xs-right">{{ props.item.amount }}</td>
+                            <td class="text-xs-right">{{ props.item.payment_system }}</td>
                             <td class="text-xs-right">
                                 <v-btn icon @click="startEdit(props.item)"><v-icon>fa-pencil</v-icon></v-btn>
-                                <v-btn icon  @click="deleteReview(props.item)"><v-icon>fa-times</v-icon></v-btn>
+                                <v-btn icon  @click="deleteTransaction(props.item)"><v-icon>fa-times</v-icon></v-btn>
                             </td>
                         </template>
                     </v-data-table>
@@ -22,29 +21,28 @@
             </v-flex>
         </v-layout>
        </v-container>
-        <v-btn color="pink darken-2" dark fixed bottom right fab @click.native.stop="newReviewDialog = !newReviewDialog">
+        <v-btn color="pink darken-2" dark fixed bottom right fab @click.native.stop="newTransactionDialog = !newTransactionDialog">
             <v-icon>fa-plus</v-icon>
         </v-btn>
         <!--NEW SERVICE MODAL-->
             <v-layout row justify-center>
-            <v-dialog  v-model="newReviewDialog" persistent max-width="500px">
+            <v-dialog  v-model="newTransactionDialog" persistent max-width="500px">
             <v-card>
                 <v-card-title>
-                <span v-if="!editOn" class="headline">Create New Review</span>
-                <span v-else class="headline">Edit Review</span>
+                <span v-if="!editOn" class="headline">Create New transaction</span>
+                <span v-else class="headline">Edit transaction</span>
                 </v-card-title>
                 <v-card-text>
                     <v-container grid-list-md>
                         <v-layout wrap>
                             <v-flex xs12>
-                                <v-form v-model="valid" ref="reviewForm" lazy-validation>
-                                    <v-text-field name="name" label="name" v-model="newReview.name" required 
+                                <v-form v-model="valid" ref="transactionForm" lazy-validation>
+                                    <v-text-field name="entity_name" label="entity_name" v-model="createNewTransaction.entity_name" required 
                                     :rules="[v => !!v || 'Item is required']"></v-text-field>
-                                    <v-text-field textarea name="comment" label="comment" v-model="newReview.comment" required 
+                                    <v-text-field textarea name="payment_sysytem" label="payment_sysytem" v-model="createNewTransaction.payment_system" required 
                                     :rules="[v => !!v || 'Item is required']"></v-text-field>
-                                    <v-text-field type="number" name="position" label="position" v-model="newReview.position" required 
+                                    <v-text-field type="number" name="amount" label="amount" v-model="createNewTransaction.amount" required 
                                     :rules="[v => !!v || 'Item is required']"></v-text-field>
-                                    <input id="photoUploadInput" name="photo" type="file" accept="image/*" @change="processFiles($event)" required> 
                                 </v-form>
                             </v-flex>
                         </v-layout>
@@ -52,9 +50,9 @@
                 </v-card-text>
                 <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="blue darken-1" flat @click.native="resetNewReview()">Cancel</v-btn>
-                <v-btn v-if="!editOn" color="teal darken-1" flat @click.native="createNewReview()" :disabled="!valid">Submit</v-btn>
-                <v-btn v-else color="teal darken-1" flat @click.native="updateReview()" :disabled="!valid">Submit</v-btn>
+                <v-btn color="blue darken-1" flat @click.native="resetNewTransaction()">Cancel</v-btn>
+                <v-btn v-if="!editOn" color="teal darken-1" flat @click.native="CreateNewTransaction()" :disabled="!valid">Submit</v-btn>
+                <v-btn v-else color="teal darken-1" flat @click.native="updateTransaction()" :disabled="!valid">Submit</v-btn>
                 </v-card-actions>
             </v-card>
             </v-dialog>
@@ -68,145 +66,84 @@ import 'firebase/firestore'
 const db = firebase.firestore()
 const storageRef = firebase.storage().ref()
 export default {
-  name: 'Reviews',
+  name: 'Transactions',
   data () {
     return {
-        newReviewDialog: false,
+        newTransactionDialog: false,
         valid: true,
-        newReview: {
-            id:null,
-            profileUrl: null,
-            name: null,
-            comment: null,
-            position:null,
-            profilePhoto:null
+        createNewTransaction: {
+            entity_name: null,
+            payment_type: null,
+            amount:null
         },
         tableHeaders: [
-            {text:"Icon", value: "profileUrl"},
-            {text:"Position", value: "position"},
-            {text:"Title", value: "name"},
-            {text:"Description", value: "comment"}
+            {text:"Name", value: "name"},
+            {text:"Amount", value: "amount"},
+            {text:"Payment system", value: "payment_system"}
         ],
-        reviews: [],
-        reviewsLoading:false,
+        transactions: [],
+        transactionsLoading:false,
         editOn:false
     }
   },
   methods:{
-    listReviews(){
-        this.reviewsLoading = true
-        this.reviews=[]
-        db.collection('reviews').get().then(querySnapshot => {
+    listTransactions(){
+        this.transactionsLoading = true
+        this.transactions=[]
+        db.collection('transactions').get().then(querySnapshot => {
                 querySnapshot.forEach(doc => {
                     const data = {
-                        'id': doc.id,
-                        'profileUrl': doc.data().profileUrl,
-                        'profilePath': doc.data().profilePath,
-                        'name':doc.data().name,
-                        'comment':doc.data().comment,
-                        'position':doc.data().position
+                        'entity_name':doc.data().entity_name,
+                        'Amount':doc.data().amount,
+                        'payment_system':doc.data().payment_system
                     }
-                    this.reviews.push(data)
+                    this.transactions.push(data)
                 })
         })
-        this.reviewsLoading = false
+        this.transactionsLoading = false
     },
-    resetNewReview(){
-        this.newReview= {
-            id:null,
-            profileUrl: null,
-            name: null,
-            comment: null,
-            position:null,
-            profilePhoto:null
+    resetNewTransaction(){
+        this.createNewTransaction= {
+            entity_name: null,
+            payment_type: null,
+            amount:null
         }
         this.editOn=false
-        this.newReviewDialog=false
-        this.$refs.reviewForm.reset()
-        var field = document.getElementById('photoUploadInput');
-        field.value= field.defaultValue;
+        this.newTransactionDialog=false
+        this.$refs.transactionForm.reset()
     },
-    startEdit(review){
-        this.newReview= {
-            id:review.id,
-            profileUrl: review.profileUrl,
-            profilePath: review.profilePath,
-            name: review.name,
-            comment: review.comment,
-            position: review.position
+    startEdit(transaction){
+        this.createNewTransaction= {
+            entity_name: null,
+            payment_type: null,
+            amount:null
         }
         this.editOn = true
-        this.newReviewDialog =true
+        this.newTransactionDialog =true
     },
-    updateReview(){
-        if( !this.newReview.name|| !this.newReview.comment || !this.newReview.position)
+    updateTransaction(){
+        if( !this.createNewTransaction.entity_name|| !this.createNewTransaction.payment || !this.createNewTransaction.amount)
             return
-        if(this.newReview.profilePhoto){
-            this.deletePhoto(this.newReview.profilePath)
-            Array.from(this.newReview.profilePhoto).forEach(photo => { 
-              const ref = 'profilePhotos'
-              var uploadTask = storageRef.child(ref +"/"+ this.newReview.name).put(photo)
-              uploadTask.on('state_changed',function(snapshot){
-                var uploadProgress = parseInt((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
-                console.log('Upload is ' + uploadProgress + '% done');
-                }, error => {
-                  console.log(error)
-                }, () => {
-                  var downloadURL = uploadTask.snapshot.downloadURL;
-                  var filePath = uploadTask.snapshot.metadata.fullPath;
-                  const docRef = db.collection('reviews').doc(this.newReview.id)
-                  docRef.set({
-                      name: this.newReview.name,
-                      comment: this.newReview.comment,
-                      position: this.newReview.position,
-                      profileUrl: downloadURL,
-                      profilePath: filePath
-                  })
-                  .then( (doc)=> {
-                      this.listReviews()
-                      console.log("Document successfully written!", doc)
-                      this.resetNewReview()
-                  })
-                  .catch(()=> {
-                  console.error("Error writing document: ", error)
-                  })
-              })
-          })
-        }else{
-          const docRef = db.collection('reviews').doc(this.newReview.id)
+            const docRef = db.collection('transactions').doc(this.createNewTransaction.id)
             docRef.set({
-                name: this.newReview.name,
-                comment: this.newReview.comment,
-                position: this.newReview.position,
-                profileUrl: this.newReview.profileUrl,
-                profilePath: this.newReview.profilePath
+                entity_name: this.createNewTransaction.entity_name,
+                payment_type: this.createNewTransaction.payment_system,
+                amount: this.createNewTransaction.amount
             })
             .then( (doc)=> {
-                this.listReviews()
+                this.listTransactions()
                 console.log("Document successfully written!", doc)
-                this.resetNewReview()
+                this.resetNewTransaction()
             })
             .catch(()=> {
             console.error("Error writing document: ", error)
             })
-        }
-        
-       
-    },
-    deletePhoto(path){
-          var desertRef = storageRef.child(path);
-          desertRef.delete().then(function() {
-          console.log("image deleted");
-          }).catch(function(error) {
-          console.log("error", error)
-          })
-    },
-    deleteReview(review){
+        },     
+        deleteTransaction(transaction){
         if(confirm("Are you sure?")){
-        this.deletePhoto(review.profilePath)
-        db.collection('reviews').doc(review.id).delete()
+        db.collection('transactions').doc(transaction.id).delete()
         .then(data => {
-            this.listReviews()
+            this.listTransactions()
             console.log("Document successfully deleted!");
         }).catch(error => {
             console.error("Error removing document: ", error);
@@ -214,41 +151,24 @@ export default {
       }
     },
     processFiles(event) {
-        this.newReview.profilePhoto = event.target.files
+        this.createNewTransaction.profilePhoto = event.target.files
     },
-    createNewReview(){
-        const ref = 'profilePhotos'
-        Array.from(this.newReview.profilePhoto).forEach(photo => { 
-          console.log("review",this.newReview)
-          var uploadTask = storageRef.child(ref +"/"+ this.newReview.name).put(photo)
-          uploadTask.on('state_changed', function(snapshot){
-          var uploadProgress = parseInt((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
-          console.log('Upload is ' + uploadProgress + '% done');
-          }, error => {
-            console.log(error)
-          }, () => {
-            
-          var downloadURL = uploadTask.snapshot.downloadURL;
-          var filePath = uploadTask.snapshot.metadata.fullPath;
-          db.collection('reviews').add({
-                  profileUrl: downloadURL,
-                  profilePath: filePath,
-                  name: this.newReview.name,
-                  comment: this.newReview.comment,
-                  position: this.newReview.position
-              })
-          .then(docRef => {
-                  this.listReviews()
-                  this.resetNewReview()
-                  this.newReviewDialog = false
-              })
-          .catch(error => console.log(err))
-          })
-      })
-    }
-  },
-  created(){
-      this.listReviews()
+    CreateNewTransaction(){
+        db.collection('transactions').add({
+                entity_name: this.createNewTransaction.entity_name,
+                payment_type: eval(this.createNewTransaction.payment_system),
+                amount: eval(this.createNewTransaction.amount)
+            })
+        .then(docRef => {
+                this.listTransactions()
+                this.resetNewTransaction()
+                this.newTransactionDialog = false
+            })
+        .catch(error => console.log(err))
+        }
+    },
+    created(){
+        this.listTransactions()
   }
 }
 </script>

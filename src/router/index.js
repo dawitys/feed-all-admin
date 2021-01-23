@@ -6,6 +6,7 @@ import Dashboard from '@/components/Dashboard'
 import Reviews from '@/components/Reviews'
 import Gallery from '@/components/Gallery'
 import Services from '@/components/Services'
+import Peoples from '@/components/Peoples'
 import Login from '@/components/Login'
 import Intro from '@/components/Intro'
 import IntroBg from '@/components/IntroBg'
@@ -38,6 +39,10 @@ const router = new Router({
           path: '/',
           component: Dashboard
         },
+        {
+          path: '/peoples',
+          component: Peoples
+      },
         {
             path: '/reviews',
             component: Reviews

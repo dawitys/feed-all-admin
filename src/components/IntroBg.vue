@@ -11,6 +11,7 @@
                 </v-card>
             </v-flex>
         </v-layout>
+
         </v-container>
         <v-btn color="pink darken-2" dark fixed bottom right fab @click.native.stop="uploadDialog = !uploadDialog">
             <v-icon>fa-upload</v-icon>
