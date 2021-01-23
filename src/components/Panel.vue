@@ -1,9 +1,9 @@
 <template>
   <div id="Panel">
       <v-app>
-        <v-toolbar app color="teal" dark>
+        <v-toolbar app color="#083110" dark>
           <v-toolbar-side-icon @click="toggleNav"><v-icon>fa-bars</v-icon></v-toolbar-side-icon>
-          <v-toolbar-title>Apartmani Lota</v-toolbar-title>
+          <v-toolbar-title>FeedAll Admin</v-toolbar-title>
           <v-spacer></v-spacer>
           <v-btn icon @click="firebaseLogout">
             <v-icon icon class="right">fa-sign-out</v-icon>

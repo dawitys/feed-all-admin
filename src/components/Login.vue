@@ -7,7 +7,7 @@
                <form @submit.prevent="firebaseLogin">
                 <v-card>
                     <v-toolbar class="teal">
-                        <div class="stretch headline white--text text-xs-center">Apartment Lota Admin</div>
+                        <div class="stretch headline white--text text-xs-center">FeedAll Admin</div>
                     </v-toolbar>
                     <v-card-text>
                         <v-layout column>
