@@ -43,9 +43,9 @@ export default {
         {title: "Dashboard", route:"/dashboard", icon:"fa-bar-chart"},
         {title: "Introduction", route:"/intro", icon:"fa-comment-o"},
         {title: "Intro Background", route:"/introbg", icon:"fa-file-image-o"},
-        {title: "Services", route:"/services", icon:"fa-bell-o"},
-        {title: "Gallery", route:"/gallery", icon:"fa-picture-o"},
-        {title: "Reviews", route:"/reviews", icon:"fa-star-o"}
+        {title: "Client (Service Providers)", route:"/services", icon:"fa-bell-o"},
+        {title: "Peoples", route:"/gallery", icon:"fa-picture-o"},
+        {title: "Transactions", route:"/reviews", icon:"fa-star-o"}
       ]
     }
   },
