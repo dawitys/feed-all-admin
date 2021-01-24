@@ -41,10 +41,10 @@ export default {
       navActive: true,
       nav:[
         {title: "Dashboard", route:"/dashboard", icon:"fa-bar-chart"},
-        {title: "Introduction", route:"/intro", icon:"fa-comment-o"},
         {title: "Client (Service Providers)", route:"/services", icon:"fa-bell-o"},
         {title: "People (Donees)", route:"/peoples", icon:"fa-users"},
-        {title: "Transactions", route:"/reviews", icon:"fa-exchange"}
+        {title: "Transactions", route:"/reviews", icon:"fa-exchange"},
+        {title: "Introduction", route:"/intro", icon:"fa-comment-o"}
       ]
     }
   },
