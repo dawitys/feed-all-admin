@@ -5,7 +5,7 @@
             <v-layout row justify-center>
             <v-flex md11 xs12>
                 <v-card>
-                    <v-card-title class="headline pink darken-2 white--text">Transactions</v-card-title>
+                    <v-card-title class="headline brown darken-2 white--text">Transactions</v-card-title>
                     <v-data-table v-bind:headers="tableHeaders" :items="transactions" hide-actions class="elevation-1">
                         <template slot="items" slot-scope="props">
                             <td class="text-xs-right">{{ props.item.entity_name }}</td>
@@ -21,7 +21,7 @@
             </v-flex>
         </v-layout>
        </v-container>
-        <v-btn color="pink darken-2" dark fixed bottom right fab @click.native.stop="newTransactionDialog = !newTransactionDialog">
+        <v-btn color="brown darken-2" dark fixed bottom right fab @click.native.stop="newTransactionDialog = !newTransactionDialog">
             <v-icon>fa-plus</v-icon>
         </v-btn>
         <!--NEW SERVICE MODAL-->

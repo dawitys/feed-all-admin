@@ -4,7 +4,7 @@
             <v-layout row justify-center>
             <v-flex md6 xs12>
                 <v-card>
-                    <v-card-title class="headline pink darken-2 white--text">Introduction</v-card-title>
+                    <v-card-title class="headline brown darken-2 white--text">Introduction</v-card-title>
                     <v-card-text>
                     <h3>{{intro.title}}</h3>
                     <v-spacer></v-spacer>
@@ -14,7 +14,7 @@
             </v-flex>
         </v-layout>
         </v-container>
-        <v-btn color="pink darken-2" dark fixed bottom right fab @click="startEdit">
+        <v-btn color="brown darken-2" dark fixed bottom right fab @click="startEdit">
             <v-icon>fa-pencil</v-icon>
         </v-btn>
 

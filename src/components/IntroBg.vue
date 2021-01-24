@@ -4,7 +4,7 @@
             <v-layout row justify-center>
             <v-flex md6 xs12>
                 <v-card>
-                    <v-card-title class="headline pink darken-2 white--text">Picture</v-card-title>
+                    <v-card-title class="headline brown darken-2 white--text">Picture</v-card-title>
                     <v-card-text class="text-xs-center">
                         <img :src="introBg.url" class="fit">
                     </v-card-text>
@@ -13,7 +13,7 @@
         </v-layout>
 
         </v-container>
-        <v-btn color="pink darken-2" dark fixed bottom right fab @click.native.stop="uploadDialog = !uploadDialog">
+        <v-btn color="brown darken-2" dark fixed bottom right fab @click.native.stop="uploadDialog = !uploadDialog">
             <v-icon>fa-upload</v-icon>
         </v-btn>
 

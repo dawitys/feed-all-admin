@@ -5,7 +5,7 @@
             <v-layout row justify-center>
             <v-flex md11 xs12>
                 <v-card>
-                    <v-card-title class="headline pink darken-2 white--text">Gallery</v-card-title>
+                    <v-card-title class="headline brown darken-2 white--text">Gallery</v-card-title>
                     <v-data-table
                         v-bind:headers="tableHeaders"
                         :items="homePhotos"
@@ -27,7 +27,7 @@
             </v-flex>
         </v-layout>   
         </v-container> 
-        <v-btn color="pink darken-2" dark fixed bottom right fab @click.native.stop="uploadDialog = !uploadDialog">
+        <v-btn color="brown darken-2" dark fixed bottom right fab @click.native.stop="uploadDialog = !uploadDialog">
             <v-icon>fa-upload</v-icon>
         </v-btn>
 <!--PREVIEW MODAL-->

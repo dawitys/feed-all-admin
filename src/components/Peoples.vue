@@ -5,7 +5,7 @@
             <v-layout row justify-center>
             <v-flex md11 xs12>
                 <v-card>
-                    <v-card-title class="headline pink darken-2 white--text">People (Donees)</v-card-title>
+                    <v-card-title class="headline brown darken-2 white--text">People (Donees)</v-card-title>
                     <v-data-table v-bind:headers="tableHeaders" :items="reviews" hide-actions class="elevation-1">
                         <template slot="items" slot-scope="props">
                             <td class="text-xs-right"><img :src="props.item.picture" class="profile-preview"></td>
@@ -22,7 +22,7 @@
             </v-flex>
         </v-layout>
        </v-container>
-        <v-btn color="pink darken-2" dark fixed bottom right fab @click.native.stop="newReviewDialog = !newReviewDialog">
+        <v-btn color="brown darken-2" dark fixed bottom right fab @click.native.stop="newReviewDialog = !newReviewDialog">
             <v-icon>fa-plus</v-icon>
         </v-btn>
         <!--NEW SERVICE MODAL-->
