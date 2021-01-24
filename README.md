@@ -1,4 +1,5 @@
-Live demo at [www.feedall.web.app]www.feedall.web.app
+Live demo at www.feedall.web.app     
+
 use admin@feed-all.org and admin! (as password)
 # admin
 
