@@ -8,12 +8,12 @@
                     <v-card-title class="headline brown darken-2 white--text">Transactions</v-card-title>
                     <v-data-table v-bind:headers="tableHeaders" :items="transactions" hide-actions class="elevation-1">
                         <template slot="items" slot-scope="props">
-                            <td class="text-xs-right">{{ props.item.entity_name }}</td>
+                            <td class="text-xs-right">{{ props.item.enitiy_name }}</td>
                             <td class="text-xs-right">{{ props.item.amount }}</td>
                             <td class="text-xs-right">{{ props.item.payment_system }}</td>
                             <td class="text-xs-right">
-                                <v-btn icon @click="startEdit(props.item)"><v-icon>fa-pencil</v-icon></v-btn>
-                                <v-btn icon  @click="deleteTransaction(props.item)"><v-icon>fa-times</v-icon></v-btn>
+                                <!-- <v-btn icon @click="startEdit(props.item)"><v-icon>fa-pencil</v-icon></v-btn> -->
+                                <!-- <v-btn icon  @click="deleteTransaction(props.item)"><v-icon>fa-times</v-icon></v-btn> -->
                             </td>
                         </template>
                     </v-data-table>
@@ -37,7 +37,7 @@
                         <v-layout wrap>
                             <v-flex xs12>
                                 <v-form v-model="valid" ref="transactionForm" lazy-validation>
-                                    <v-text-field name="entity_name" label="entity_name" v-model="createNewTransaction.entity_name" required 
+                                    <v-text-field name="enitiy_name" label="enitiy_name" v-model="createNewTransaction.enitiy_name" required 
                                     :rules="[v => !!v || 'Item is required']"></v-text-field>
                                     <v-text-field textarea name="payment_sysytem" label="payment_sysytem" v-model="createNewTransaction.payment_system" required 
                                     :rules="[v => !!v || 'Item is required']"></v-text-field>
@@ -72,12 +72,12 @@ export default {
         newTransactionDialog: false,
         valid: true,
         createNewTransaction: {
-            entity_name: null,
+            enitiy_name: null,
             payment_type: null,
             amount:null
         },
         tableHeaders: [
-            {text:"Name", value: "entity_name"},
+            {text:"Name", value: "enitiy_name"},
             {text:"Amount", value: "amount"},
             {text:"Payment system", value: "payment_system"}
         ],
@@ -93,7 +93,7 @@ export default {
         db.collection('transactions').get().then(querySnapshot => {
                 querySnapshot.forEach(doc => {
                     const data = {
-                        'entity_name':doc.data().entity_name,
+                        'enitiy_name':doc.data().enitiy_name,
                         'amount':doc.data().amount,
                         'payment_system':doc.data().payment_system == 3 ? "SMS Mobile Donation" : "Bank Donation"
                     }
@@ -104,7 +104,7 @@ export default {
     },
     resetNewTransaction(){
         this.createNewTransaction= {
-            entity_name: null,
+            enitiy_name: null,
             payment_type: null,
             amount:null
         }
@@ -114,7 +114,7 @@ export default {
     },
     startEdit(transaction){
         this.createNewTransaction= {
-            entity_name: null,
+            enitiy_name: null,
             payment_type: null,
             amount:null
         }
@@ -122,11 +122,11 @@ export default {
         this.newTransactionDialog =true
     },
     updateTransaction(){
-        if( !this.createNewTransaction.entity_name|| !this.createNewTransaction.payment || !this.createNewTransaction.amount)
+        if( !this.createNewTransaction.enitiy_name|| !this.createNewTransaction.payment || !this.createNewTransaction.amount)
             return
             const docRef = db.collection('transactions').doc(this.createNewTransaction.id)
             docRef.set({
-                entity_name: this.createNewTransaction.entity_name,
+                enitiy_name: this.createNewTransaction.enitiy_name,
                 payment_type: this.createNewTransaction.payment_system,
                 amount: this.createNewTransaction.amount
             })
@@ -155,7 +155,7 @@ export default {
     },
     CreateNewTransaction(){
         db.collection('transactions').add({
-                entity_name: this.createNewTransaction.entity_name,
+                enitiy_name: this.createNewTransaction.enitiy_name,
                 payment_type: eval(this.createNewTransaction.payment_system),
                 amount: eval(this.createNewTransaction.amount)
             })
