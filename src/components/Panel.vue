@@ -42,8 +42,6 @@ export default {
       nav:[
         {title: "Dashboard", route:"/dashboard", icon:"fa-bar-chart"},
         {title: "Introduction", route:"/intro", icon:"fa-comment-o"},
-        {title: "Intro Background", route:"/introbg", icon:"fa-file-image-o"},
-        {title: "Galary", route:"/gallery", icon:"fa-picture-o"},
         {title: "Client (Service Providers)", route:"/services", icon:"fa-bell-o"},
         {title: "People (Donees)", route:"/peoples", icon:"fa-users"},
         {title: "Transactions", route:"/reviews", icon:"fa-exchange"}
