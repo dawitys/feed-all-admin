@@ -77,7 +77,7 @@ export default {
             amount:null
         },
         tableHeaders: [
-            {text:"Name", value: "name"},
+            {text:"Name", value: "entity_name"},
             {text:"Amount", value: "amount"},
             {text:"Payment system", value: "payment_system"}
         ],
@@ -94,8 +94,8 @@ export default {
                 querySnapshot.forEach(doc => {
                     const data = {
                         'entity_name':doc.data().entity_name,
-                        'Amount':doc.data().amount,
-                        'payment_system':doc.data().payment_system
+                        'amount':doc.data().amount,
+                        'payment_system':doc.data().payment_system == 3 ? "SMS Mobile Donation" : "Bank Donation"
                     }
                     this.transactions.push(data)
                 })

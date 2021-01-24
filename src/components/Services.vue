@@ -8,13 +8,13 @@
                     <v-card-title class="headline brown darken-2 white--text">ServiceProviders</v-card-title>
                     <v-data-table v-bind:headers="tableHeaders" :items="serviceProviders" hide-actions class="elevation-1">
                         <template slot="items" slot-scope="props">
-                            <td class="text-xs-right">{{ props.item.position }}</td>
-                            <td class="text-xs-right"><v-icon>{{ props.item.icon }}</v-icon></td>
                             <td class="text-xs-right">{{ props.item.name }}</td>
                             <td class="text-xs-right">{{ props.item.location }}</td>
+                            <td class="text-xs-right">{{ props.item.paid }}</td>
+                            <td class="text-xs-right">{{ props.item.unpaid }}</td>
                             <td class="text-xs-right">
-                                <v-btn icon  @click="startEdit(props.item)"><v-icon>fa-pencil</v-icon></v-btn>
-                                <v-btn icon  @click="deleteService(props.item)"><v-icon>fa-times</v-icon></v-btn>
+                                <!-- <v-btn icon  @click="startEdit(props.item)"><v-icon>fa-pencil</v-icon></v-btn> -->
+                                <v-btn icon  @click="deleteService(props.item)"><v-icon>fa-money</v-icon><i> Pay</i></v-btn>
                             </td>
                         </template>
                     </v-data-table>
@@ -79,10 +79,10 @@ export default {
             position:null
         },
         tableHeaders: [
-            {text:"Position", value: "position"},
-            {text:"Icon", value: "icon"},
             {text:"Name", value: "name"},
-            {text:"Location", value: "location"}
+            {text:"Location", value: "location"},
+            {text:"Paid", value: "paid"},
+            {text:"Unpaid", value: "Unpaid"}
         ],
         serviceProviders: [],
         serviceProvidersLoading:false,
@@ -97,10 +97,10 @@ export default {
                 querySnapshot.forEach(doc => {
                     const data = {
                         'id': doc.id,
-                        'icon': doc.data().icon,
                         'name':doc.data().name,
                         'location':doc.data().location,
-                        'position':doc.data().position
+                        'paid': doc.data().paid,
+                        'unpaid':doc.data().unpaid
                     }
                     this.serviceProviders.push(data)
                 })
@@ -111,7 +111,7 @@ export default {
         if( !this.newService.icon || !this.newService.name|| !this.newService.location || !this.newService.position)
             return
         db.collection('clients').add({
-            icon: this.newService.icon,
+            paid: this.newService.paid,
             title: this.newService.name,
             location: this.newService.location,
             position: this.newService.position
@@ -153,8 +153,8 @@ export default {
         docRef.set({
             name: this.newService.name,
             location: this.newService.location,
-            position: this.newService.position,
-            icon: this.newService.icon
+            paid: this.newService.paid,
+            unpaid: this.newService.unpaid
             })
             .then( (doc)=> {
                 this.listServiceProviders()
@@ -166,13 +166,18 @@ export default {
         })
     },
     deleteService(service){
-        if(confirm("Are you sure?")){
-        const docRef = db.collection('clients').doc(service.id).delete()
+        if(confirm("You are about to make payment. Are you sure?")){
+            const dRef = db.collection('balance').doc("amount")
+            dRef.update({amount : 100201 })
+
+            const docRef = db.collection('clients').doc(service.id)
+            docRef.update({paid : service.paid+service.unpaid})
+            docRef.update({unpaid : 0})
         .then(data => {
             this.listServiceProviders()
-            console.log("Document successfully deleted!");
+            console.log("Payment made!");
         }).catch(error => {
-            console.error("Error removing document: ", error);
+            console.error("Error making payment : ", error);
         })
       }
     }
