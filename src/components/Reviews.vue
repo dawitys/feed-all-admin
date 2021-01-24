@@ -1,4 +1,20 @@
 <template>
+    <div>
+        <div id="left" class="box">
+    <div class="box__header">
+      <h2 class="box__header-title">Total Balance</h2>
+    </div>
+    <div class="box__body">
+      <div class="stats stats--main">
+        <div class="stats__amount">{{balance}}</div>
+        <div class="stats__caption">Ethiopian Birr</div>
+        <div class="stats__change">
+          <div class="stats__value stats__value--positive">+6%</div>
+          <div class="stats__period">this week</div>
+        </div>
+      </div>
+    </div>
+  </div>
     <div id="Transactions">
         <!--Review TABLE-->
        <v-container fluid>
@@ -58,6 +74,7 @@
             </v-dialog>
         </v-layout>
     </div>
+    </div>
 </template>
 
 <script>
@@ -82,6 +99,7 @@ export default {
             {text:"Payment system", value: "payment_system"}
         ],
         transactions: [],
+        balance : 1000,
         transactionsLoading:false,
         editOn:false
     }
@@ -98,6 +116,14 @@ export default {
                         'payment_system':doc.data().payment_system == 3 ? "SMS Mobile Donation" : "Bank Donation"
                     }
                     this.transactions.push(data)
+                })
+        })
+        db.collection('balance').get().then(querySnapshot => {
+                querySnapshot.forEach(doc => {
+                    const data = {
+                        'amount':doc.data().amount,
+                    }
+                    this.balance = data.amount
                 })
         })
         this.transactionsLoading = false
@@ -181,4 +207,73 @@ export default {
   object-fit:cover;
 }
 
+
+.box {
+	background: linear-gradient(#2b9966, #083110);
+	margin: 15px auto 0;
+	border-radius: 5px;
+    width: 500px;
+    position: relative;
+}
+
+.box__header {
+	padding: 15px 25px;
+	position: relative;
+}
+
+.box__header-title {
+	color: #fff;
+	font-size: 18px;
+}
+
+.box__body {
+	padding: 0 25px;
+}
+
+/* STATS */
+
+.stats {
+	color: #fff;
+	position: relative;
+	padding-bottom: 25px;
+}
+
+.stats__amount {
+	font-size: 42px;
+	font-weight: bold;
+	line-height: 1.2;
+}
+
+.stats__caption {
+	font-size: 18px;
+
+}
+
+.stats__change {
+	position: absolute;
+	top: 10px;
+	right: 0;
+	text-align: right;
+	color: #B1B7C8;
+}
+
+.stats__value {
+	font-size: 18px;
+}
+
+.stats__period {
+	font-size: 14px;
+}
+
+.stats__value--positive {
+	color: #AEDC6F;
+}
+
+.stats__value--negative {
+	color: #FB5055;
+}
+
+.stats--main .stats__amount {
+	font-size: 54px;
+}
 </style>
